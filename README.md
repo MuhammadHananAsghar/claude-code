@@ -1,310 +1,521 @@
-# Claude Code Exposure Archive, Python Porting Context, and OmX Workflow Notes
+# Claude Code — Source Analysis
 
-> This repository keeps a **publicly exposed Claude Code source snapshot** that became accessible on **March 31, 2026** through a source map exposure in the npm distribution, together with companion essay/context notes and OmX-assisted documentation work.
+> **This is Anthropic's real Claude Code CLI source**, extracted via an npm source map leak on **March 31, 2026**.  
+> Discovered by [@Fried_rice (Chaofan Shou)](https://twitter.com/Fried_rice).  
+> Analysis by [Muhammad Hanan Asghar](https://github.com/MuhammadHananAsghar).
 
----
-
-## Archive Context
-
-This repository is maintained by a **university student** studying:
-
-- software supply-chain exposure and build artifact leaks
-- secure software engineering practices
-- agentic developer tooling architecture
-- defensive analysis of real-world CLI systems
-
-This archive is intended to support:
-
-- educational study
-- security research practice
-- architecture review
-- discussion of packaging and release-process failures
-
-Related research writing:
-
-- [*Is legal the same as legitimate: AI reimplementation and the erosion of copyleft*](https://writings.hongminhee.org/2026/03/legal-vs-legitimate/)
-
-The essay is dated **March 9, 2026**, so it should be read as companion analysis that predates the **March 31, 2026** source exposure documented below.
-
-## Why this archive exists (and what it is not)
-
-I initially kept this repository as a source-exposure archive so I could study the harness, tool wiring, and agent workflow. After sitting with the legal and ethical questions more seriously—and after reading the essay linked above—I no longer wanted the README to treat raw legality as the only frame.
-
-This branch therefore takes a smaller and more honest step: it keeps that essay in view as companion reading and makes the archive's research-only framing more explicit. This repository is still a mirrored TypeScript source snapshot for analysis; it is **not** a clean-room or Python rewrite.
-
-## Built with `oh-my-codex`
-
-The README/essay archival work on this branch was AI-assisted and orchestrated with Yeachan Heo's [oh-my-codex (OmX)](https://github.com/Yeachan-Heo/oh-my-codex), a workflow layer built around Codex.
-
-- **`$team` mode:** used for coordinated parallel review of repo fit, wording risk, and final architecture consistency.
-- **`$ralph` mode:** used for persistent execution, verification, and final architect sign-off before claiming completion.
-- **Codex-driven workflow:** this documentation/contextualization pass was completed with Codex under OmX orchestration.
-
-### OmX workflow screenshots
-
-![OmX workflow screenshot 1](assets/omx/omx-readme-review-1.png)
-
-*Ralph/team orchestration view while the README and essay context were being reviewed in terminal panes.*
-
-![OmX workflow screenshot 2](assets/omx/omx-readme-review-2.png)
-
-*Split-pane review and verification flow during the final README wording pass.*
-
-It does **not** claim ownership of the original code, and it should not be interpreted as an official Anthropic repository.
+> Static analysis only — the code cannot be compiled or run as-is.
 
 ---
 
-## How the Public Snapshot Became Accessible
+## Authenticity
 
-[Chaofan Shou (@Fried_rice)](https://x.com/Fried_rice) publicly noted that Claude Code source material was reachable through a `.map` file exposed in the npm package:
+### Authentication Proof
 
-> **"Claude code source code has been leaked via a map file in their npm registry!"**
->
-> — [@Fried_rice, March 31, 2026](https://x.com/Fried_rice/status/2038894956459290963)
+| Evidence | Details |
+|----------|---------|
+| OAuth Client IDs | Hardcoded UUID: `9d1c250a-e61b-44d9-88ed-5944d1962f5e` (prod) |
+| API Endpoints | `api.anthropic.com`, `platform.claude.com/v1/oauth/token` |
+| Internal Domains | `.ant.dev` (Anthropic-only infra), `artifactory.infra.ant.dev` |
+| Slack Channels | Multiple `anthropic.slack.com/archives/C0xxxxx` references |
+| SDK | Uses `@anthropic-ai/sdk` with proper client initialization |
 
-The published source map referenced unobfuscated TypeScript sources hosted in Anthropic's R2 storage bucket, which made the `src/` snapshot publicly downloadable.
+### Source Map Extraction Signature
+
+1,679 of 1,884 `.ts` files use `.js` extensions in imports — the unmistakable fingerprint of source-map reconstruction. Normal TypeScript repos don't do this.
+
+```typescript
+// Example from the extracted code:
+import { getOauthConfig } from '../constants/oauth.js'  // .js in .ts = source map extraction
+```
+
+### Feature Match — 100%
+
+| Feature | Present |
+|---------|---------|
+| Tools (Read, Write, Edit, Bash, Grep, Glob, Agent) | ✅ 45 tools |
+| Slash commands (/commit, /compact, /config, etc.) | ✅ 103+ commands |
+| MCP server integration | ✅ |
+| Remote sessions (bridge / CCR) | ✅ |
+| Voice mode | ✅ |
+| Vim mode | ✅ |
+| Plan mode | ✅ |
+| Worktree isolation | ✅ |
+| Agent SDK | ✅ |
+
+### Scale
+
+| Metric | Value |
+|--------|-------|
+| Total files | 1,902 |
+| Lines of TypeScript | 512,685 |
+| Built-in tools | 45 |
+| Slash commands | 103+ |
+| MCP transport types | 6 |
+| Internal feature flags | PROACTIVE, KAIROS, BRIDGE_MODE, DAEMON, VOICE_MODE |
+| Missing (expected) | `package.json`, `tsconfig.json`, build config — not stored in source maps |
 
 ---
 
-## Repository Scope
+## Documentation Index
 
-Claude Code is Anthropic's CLI for interacting with Claude from the terminal to perform software engineering tasks such as editing files, running commands, searching codebases, and coordinating workflows.
-
-This repository contains a mirrored `src/` snapshot for research and analysis.
-
-- **Public exposure identified on**: 2026-03-31
-- **Language**: TypeScript
-- **Runtime**: Bun
-- **Terminal UI**: React + [Ink](https://github.com/vadimdemedes/ink)
-- **Scale**: ~1,900 files, 512,000+ lines of code
+| Document | Description |
+|----------|-------------|
+| [Tools System](docs/tools-system.md) | Full tool interface, execution pipeline, permission architecture |
+| [Tools List](docs/tools-list.md) | All 45 tools with inputs, descriptions, read-only/concurrency flags |
+| [MCP System](docs/mcp-system.md) | Model Context Protocol — transports, OAuth, elicitation, plugins |
+| [Memory System](docs/memory-system.md) | 4-tier memory, CLAUDE.md hierarchy, auto-dream consolidation |
+| [Skills System](docs/skills-system.md) | SKILL.md-backed slash commands, prompt expansion pipeline |
+| [Slash Commands](docs/slash-commands.md) | All 103+ slash commands with availability and descriptions |
+| [Plan Mode System](docs/plan-mode-system.md) | 5-phase planning workflow, agents, approval flow |
+| [Remote Sessions](docs/remote-sessions-system.md) | CCR bridge, WebSocket/SSE transports, worktree provisioning |
+| [API Endpoints](docs/api-endpoints.md) | All 68 HTTP/WebSocket endpoints with auth and headers |
 
 ---
 
-## Directory Structure
+## Architecture Overview
 
-```text
+```mermaid
+graph TB
+    User["👤 User / claude.ai"]
+
+    subgraph CLI["Claude Code CLI"]
+        REPL["REPL / Terminal UI\n(React + Ink)"]
+        CMD["Slash Commands\n103+ commands"]
+        QUERY["Query Engine\n(main loop)"]
+        TOOLS["Tool Executor\n45 built-in tools"]
+        PERMS["Permission System\n7-layer check"]
+        MEMORY["Memory System\nCLAUDE.md hierarchy"]
+        MCP["MCP Client\n6 transport types"]
+        PLAN["Plan Mode\n5-phase workflow"]
+        BRIDGE["Remote Bridge\nCCR v1/v2"]
+    end
+
+    API["Anthropic API\napi.anthropic.com"]
+    MCPSERVERS["MCP Servers\n(external)"]
+    REMOTE["claude.ai\n(remote control)"]
+
+    User --> REPL
+    REPL --> CMD
+    REPL --> QUERY
+    QUERY --> TOOLS
+    QUERY --> MEMORY
+    TOOLS --> PERMS
+    PERMS --> TOOLS
+    TOOLS --> MCP
+    MCP --> MCPSERVERS
+    QUERY --> API
+    QUERY --> PLAN
+    BRIDGE --> REMOTE
+    CLI --> BRIDGE
+```
+
+---
+
+## Tool Execution Flow
+
+```mermaid
+flowchart TD
+    A["Model returns tool_use block"] --> B["assembleToolPool()"]
+    B --> C{"Tool found?"}
+    C -- No --> ERR["Return error result"]
+    C -- Yes --> D["validateInput (Zod schema)"]
+    D --> E{"Valid?"}
+    E -- No --> ERR
+    E -- Yes --> F["Pre-hooks\n(PreToolUse)"]
+    F --> G{"Hook outcome?"}
+    G -- block --> ERR
+    G -- approve --> I
+    G -- continue --> H["checkPermissions()"]
+    H --> I{"Permission?"}
+    I -- deny --> J["Show permission dialog\n(user approval)"]
+    J --> K{"User approves?"}
+    K -- No --> ERR
+    K -- Yes --> I2["Permission granted"]
+    I -- allow --> I2
+    I2 --> L["tool.call(input, context)"]
+    L --> M["Post-hooks\n(PostToolUse)"]
+    M --> N["mapToolResultToToolResultBlockParam()"]
+    N --> O["Return to model"]
+
+    style ERR fill:#ff6b6b,color:#fff
+    style I2 fill:#51cf66,color:#fff
+```
+
+---
+
+## Permission System (7 Layers)
+
+```mermaid
+flowchart LR
+    A["Tool call"] --> B["1. Zod\nvalidation"]
+    B --> C["2. validateInput()\ncustom checks"]
+    C --> D["3. Pre-hooks\nPreToolUse"]
+    D --> E["4. Permission rules\nallow/deny lists"]
+    E --> F["5. checkPermissions()\ntool-specific logic"]
+    F --> G{"6. Dialog\n(if needed)"}
+    G -- approved --> H["7. Sandbox check\nSandboxManager"]
+    H --> EXEC["✅ Execute"]
+    G -- denied --> BLOCK["🚫 Blocked"]
+
+    style EXEC fill:#51cf66,color:#fff
+    style BLOCK fill:#ff6b6b,color:#fff
+```
+
+---
+
+## MCP Flow
+
+```mermaid
+sequenceDiagram
+    participant Claude as Claude Code CLI
+    participant MCPClient as MCP Client
+    participant Transport as Transport Layer
+    participant Server as MCP Server
+
+    Claude->>MCPClient: getTools() / getResources()
+    MCPClient->>Transport: initialize connection
+    
+    alt stdio transport
+        Transport->>Server: spawn subprocess
+    else SSE transport
+        Transport->>Server: GET /sse (EventSource)
+    else HTTP transport
+        Transport->>Server: POST /mcp
+    end
+
+    Server-->>Transport: capabilities response
+    Transport-->>MCPClient: connected
+    MCPClient-->>Claude: tool list (cached LRU-20)
+
+    Note over Claude,Server: Tool call flow
+
+    Claude->>MCPClient: callTool(name, input)
+    MCPClient->>Transport: JSON-RPC request
+    Transport->>Server: tools/call
+    Server-->>Transport: result
+    Transport-->>MCPClient: response
+    
+    alt 401 Unauthorized
+        MCPClient->>Claude: trigger McpAuthTool
+        Claude->>Server: OAuth flow
+        Server-->>Claude: token
+        Claude->>MCPClient: retry callTool
+    end
+
+    MCPClient-->>Claude: tool result
+```
+
+---
+
+## MCP Transport Types
+
+```mermaid
+graph LR
+    MCP["MCP Client"] --> T1["stdio\nsubprocess spawn"]
+    MCP --> T2["SSE\nServer-Sent Events"]
+    MCP --> T3["HTTP\nJSON-RPC POST"]
+    MCP --> T4["WebSocket\nws:// connection"]
+    MCP --> T5["SDK\nIn-process bridge"]
+    MCP --> T6["claudeai-proxy\nhttps://mcp-proxy.anthropic.com"]
+
+    T1 --> S1["Local CLI tools\ngit, filesystem, etc"]
+    T2 --> S2["Remote servers\nwith SSE endpoint"]
+    T3 --> S3["Stateless remote\nservers"]
+    T4 --> S4["Bidirectional\nreal-time servers"]
+    T5 --> S5["Claude Code as\nMCP server"]
+    T6 --> S6["Official registry\nservers"]
+```
+
+---
+
+## Memory System
+
+```mermaid
+graph TD
+    subgraph Sources["Memory Sources (priority order)"]
+        M1["1. Enterprise CLAUDE.md\n/etc/claude/CLAUDE.md"]
+        M2["2. User CLAUDE.md\n~/.claude/CLAUDE.md"]
+        M3["3. Project CLAUDE.md\n{git-root}/CLAUDE.md"]
+        M4["4. Local CLAUDE.md\n.claude/CLAUDE.md"]
+        M5["5. Auto memory\n~/.claude/projects/{hash}/memory/"]
+        M6["6. Team memory\nGitHub-synced entries"]
+        M7["7. Agent memory\n~/.claude/agents/memory/"]
+    end
+
+    subgraph MEMINDEX["MEMORY.md Index"]
+        IDX["MEMORY.md\nmax 200 lines / 25KB\nAI picks up to 5 relevant files"]
+    end
+
+    subgraph Types["Memory Types"]
+        T1["user — role, preferences"]
+        T2["feedback — corrections, patterns"]
+        T3["project — goals, decisions"]
+        T4["reference — external pointers"]
+    end
+
+    M1 & M2 & M3 & M4 --> QUERY["Query Engine\n(injected into system prompt)"]
+    M5 --> IDX --> QUERY
+    M6 --> QUERY
+    M7 --> QUERY
+    IDX --> T1 & T2 & T3 & T4
+```
+
+---
+
+## Plan Mode Flow
+
+```mermaid
+flowchart TD
+    START(["User / Claude calls\nEnterPlanMode"]) --> PREP["prepareContextForPlanMode()\nSave prePlanMode\nStrip dangerous permissions"]
+    PREP --> MODE["mode = 'plan'"]
+
+    MODE --> PH1["Phase 1: Explore\nLaunch 3 Explore agents in parallel\nRead files, grep, glob"]
+    PH1 --> PH2["Phase 2: Design\nLaunch 1–3 Plan agents\nWrite to plan file (.md)"]
+    PH2 --> PH3["Phase 3: Review\nMain loop reviews all plans\nReconcile trade-offs"]
+    PH3 --> PH4["Phase 4: Final Plan\nFormat final plan file\n~/.claude/plans/{slug}.md"]
+    PH4 --> PH5["Phase 5: ExitPlanMode\nPresent plan to user"]
+
+    PH5 --> APPROVAL{"User approves?"}
+    APPROVAL -- No --> PH2
+    APPROVAL -- Yes --> RESTORE["Restore prePlanMode\nRe-enable permissions"]
+    RESTORE --> IMPL(["Begin implementation"])
+
+    subgraph TeamFlow["Teammate Flow (plan_mode_required)"]
+        TM["Teammate calls ExitPlanMode"] --> MAILBOX["Send plan_approval_request\nto team lead via mailbox"]
+        MAILBOX --> LEAD{"Team lead\napproves?"}
+        LEAD -- Yes --> IMPL
+        LEAD -- No --> TM
+    end
+
+    style IMPL fill:#51cf66,color:#fff
+    style MODE fill:#339af0,color:#fff
+```
+
+---
+
+## Remote Sessions (CCR) Flow
+
+```mermaid
+sequenceDiagram
+    participant User as User (claude.ai)
+    participant CLI as Claude Code CLI
+    participant API as Anthropic API
+    participant CCR as CCR Session Ingress
+    participant Transport as Transport (SSE/WS)
+
+    Note over CLI,API: V2 Environment-less path
+
+    CLI->>API: POST /v1/code/sessions
+    API-->>CLI: { session_id }
+
+    CLI->>API: POST /v1/code/sessions/{id}/bridge
+    API-->>CLI: { worker_jwt, api_base_url }
+
+    CLI->>CCR: POST /worker/register
+    CCR-->>CLI: { worker_epoch }
+
+    CLI->>Transport: Connect SSE stream\n/worker/events/stream
+    Transport-->>CLI: connected
+
+    loop Session active
+        User->>API: Send message (claude.ai)
+        API->>Transport: Stream event (inbound message)
+        Transport->>CLI: onData callback
+        CLI->>CLI: Execute tools, generate response
+        CLI->>CCR: POST response chunks (HTTP)
+        CCR->>API: Forward to claude.ai
+        CLI->>CCR: POST /worker/heartbeat (every 20s)
+    end
+
+    CLI->>API: POST /v1/sessions/{id}/archive
+```
+
+---
+
+## Remote Sessions Transport Selection
+
+```mermaid
+flowchart LR
+    ENV{"Env var?"} 
+    ENV -- "CLAUDE_CODE_USE_CCR_V2=1" --> SSE["SSETransport\nRead: SSE stream\nWrite: HTTP POST batches"]
+    ENV -- "CLAUDE_CODE_POST_FOR_SESSION_INGRESS_V2=1" --> HYBRID["HybridTransport\nRead: WebSocket\nWrite: HTTP POST batches"]
+    ENV -- "default" --> WS["WebSocketTransport\nRead + Write: WebSocket"]
+
+    SSE --> CCR["CCRClient\nHeartbeat 20s\nEpoch tracking\nEvent upload queues"]
+    HYBRID --> CCR
+    WS --> DIRECT["Direct WS connection\nto session ingress"]
+```
+
+---
+
+## Skills / Slash Command Resolution
+
+```mermaid
+flowchart TD
+    INPUT["User types /skill-name"] --> LOOKUP["getCommands(cwd)"]
+
+    LOOKUP --> S1["Bundled skills\n17 built-in SKILL.md files"]
+    LOOKUP --> S2["User skills\n~/.claude/skills/*.md\n.claude/skills/*.md"]
+    LOOKUP --> S3["Plugin skills\nfrom installed plugins"]
+    LOOKUP --> S4["Built-in commands\n103+ hardcoded"]
+    LOOKUP --> S5["Workflow scripts\n.claude/workflows/*.md"]
+
+    S1 & S2 & S3 --> SKILL["SkillTool.call()"]
+    S4 --> LOCALCMD["Local JS command\nor prompt expansion"]
+    S5 --> WORKFLOW["WorkflowTool.call()"]
+
+    SKILL --> EXPAND["Prompt expansion pipeline\n1. baseDir substitution\n2. $ARGUMENTS injection\n3. $CLAUDE_SKILL_DIR\n4. $CLAUDE_SESSION_ID\n5. Inline shell execution"]
+    EXPAND --> MODEL["Sent to model\nas user message"]
+
+    LOCALCMD --> MODEL
+    WORKFLOW --> MODEL
+```
+
+---
+
+## OAuth Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant CLI as Claude Code CLI
+    participant Browser as Browser
+    participant Auth as api.anthropic.com/oauth
+    participant API as Anthropic API
+
+    CLI->>CLI: Generate PKCE code_verifier + code_challenge
+    CLI->>Browser: Open authorize URL\n(client_id, scope, code_challenge)
+    Browser->>Auth: User logs in + approves scopes
+    Auth-->>Browser: Redirect with auth code
+    Browser-->>CLI: Capture redirect (local server)
+
+    CLI->>Auth: POST /v1/oauth/token\n{ code, code_verifier, client_id }
+    Auth-->>CLI: { access_token, refresh_token, expires_in }
+
+    CLI->>Auth: GET /api/oauth/profile
+    Auth-->>CLI: { org_uuid, user_id, subscription_type }
+
+    Note over CLI,API: Token stored in OS keychain
+
+    loop Token expired (8h TTL)
+        CLI->>Auth: POST /v1/oauth/token\n{ grant_type: refresh_token }
+        Auth-->>CLI: new access_token
+    end
+
+    CLI->>API: All requests\nAuthorization: Bearer {access_token}\nx-organization-uuid: {org_uuid}
+```
+
+---
+
+## Agent System
+
+```mermaid
+graph TD
+    AGENT["Agent tool call"] --> TYPE{"subagent_type"}
+
+    TYPE --> GP["general-purpose\nAll tools available"]
+    TYPE --> EXPLORE["Explore\nRead-only tools\nGlob, Grep, Read, Bash(ro)"]
+    TYPE --> PLAN["Plan\nRead-only + plan file write\nNo nested agents"]
+    TYPE --> GUIDE["claude-code-guide\nContext7, WebSearch, WebFetch"]
+    TYPE --> VERIFY["verification\nTest runner, linter"]
+    TYPE --> STATUSLINE["statusline-setup\nRead + Edit only"]
+    TYPE --> CUSTOM["Custom agents\n~/.claude/agents/*.md\nor .claude/agents/*.md"]
+
+    EXPLORE --> FORK["Fork subprocess\nIsolated context"]
+    PLAN --> FORK
+    GP --> FORK
+
+    FORK --> ISOLATED["Isolated memory\nOwn tool pool\nOwn permission context"]
+    ISOLATED --> RESULT["Result returned\nto parent agent"]
+
+    subgraph Worktree["Optional: Isolation mode"]
+        WT["isolation: 'worktree'\nFresh git worktree\nClean branch"]
+    end
+
+    FORK -.-> WT
+```
+
+---
+
+## Security Architecture
+
+```mermaid
+graph LR
+    subgraph Threats["Threat Surface"]
+        T1["User input"]
+        T2["File system"]
+        T3["Shell execution"]
+        T4["MCP servers"]
+        T5["Remote sessions"]
+    end
+
+    subgraph Defenses["Defense Layers"]
+        D1["Zod schema validation\non all tool inputs"]
+        D2["Path traversal checks\ncontainsPathTraversal()"]
+        D3["tree-sitter AST\nbash security analysis"]
+        D4["MCP tool annotations\nreadOnlyHint, destructiveHint"]
+        D5["OAuth + Worker JWT\n+ Trusted Device Token"]
+        D6["Sandbox execution\nSandboxManager"]
+        D7["Permission allow/deny lists\nper-project + per-session"]
+        D8["Plan mode\nread-only phase"]
+    end
+
+    T1 --> D1
+    T2 --> D2
+    T3 --> D3 --> D6
+    T4 --> D4 --> D7
+    T5 --> D5
+    D7 --> D8
+```
+
+---
+
+## Codebase Structure
+
+```
 src/
-├── main.tsx                 # Entrypoint orchestration (Commander.js-based CLI path)
-├── commands.ts              # Command registry
-├── tools.ts                 # Tool registry
-├── Tool.ts                  # Tool type definitions
-├── QueryEngine.ts           # LLM query engine
-├── context.ts               # System/user context collection
-├── cost-tracker.ts          # Token cost tracking
-│
-├── commands/                # Slash command implementations (~50)
-├── tools/                   # Agent tool implementations (~40)
-├── components/              # Ink UI components (~140)
-├── hooks/                   # React hooks
-├── services/                # External service integrations
-├── screens/                 # Full-screen UIs (Doctor, REPL, Resume)
-├── types/                   # TypeScript type definitions
-├── utils/                   # Utility functions
-│
-├── bridge/                  # IDE and remote-control bridge
-├── coordinator/             # Multi-agent coordinator
-├── plugins/                 # Plugin system
-├── skills/                  # Skill system
-├── keybindings/             # Keybinding configuration
-├── vim/                     # Vim mode
-├── voice/                   # Voice input
-├── remote/                  # Remote sessions
-├── server/                  # Server mode
-├── memdir/                  # Persistent memory directory
-├── tasks/                   # Task management
-├── state/                   # State management
-├── migrations/              # Config migrations
-├── schemas/                 # Config schemas (Zod)
-├── entrypoints/             # Initialization logic
-├── ink/                     # Ink renderer wrapper
-├── buddy/                   # Companion sprite
-├── native-ts/               # Native TypeScript utilities
-├── outputStyles/            # Output styling
-├── query/                   # Query pipeline
-└── upstreamproxy/           # Proxy configuration
+├── tools/              # 45 built-in tools (one dir per tool)
+├── commands/           # 103+ slash commands
+├── services/
+│   └── mcp/            # MCP client, transports, auth
+├── bridge/             # Remote sessions (CCR v1/v2)
+├── cli/
+│   └── transports/     # WebSocket, SSE, Hybrid transports
+├── upstreamproxy/      # CONNECT-over-WebSocket tunnel
+├── utils/
+│   ├── permissions/    # Permission system
+│   ├── plans.ts        # Plan file management
+│   ├── worktree.ts     # Git worktree provisioning
+│   └── teamMemory.ts   # Team memory sync
+├── skills/             # Bundled SKILL.md files
+├── types/              # Shared TypeScript types
+├── components/         # React/Ink terminal UI components
+├── constants/          # OAuth config, feature flags
+└── entrypoints/        # CLI, MCP server, bridge daemon
 ```
 
 ---
 
-## Architecture Summary
+## Key Internal Feature Flags
 
-### 1. Tool System (`src/tools/`)
+These `bun:bundle` compile-time flags gate entire subsystems:
 
-Every tool Claude Code can invoke is implemented as a self-contained module. Each tool defines its input schema, permission model, and execution logic.
-
-| Tool | Description |
-|---|---|
-| `BashTool` | Shell command execution |
-| `FileReadTool` | File reading (images, PDFs, notebooks) |
-| `FileWriteTool` | File creation / overwrite |
-| `FileEditTool` | Partial file modification (string replacement) |
-| `GlobTool` | File pattern matching search |
-| `GrepTool` | ripgrep-based content search |
-| `WebFetchTool` | Fetch URL content |
-| `WebSearchTool` | Web search |
-| `AgentTool` | Sub-agent spawning |
-| `SkillTool` | Skill execution |
-| `MCPTool` | MCP server tool invocation |
-| `LSPTool` | Language Server Protocol integration |
-| `NotebookEditTool` | Jupyter notebook editing |
-| `TaskCreateTool` / `TaskUpdateTool` | Task creation and management |
-| `SendMessageTool` | Inter-agent messaging |
-| `TeamCreateTool` / `TeamDeleteTool` | Team agent management |
-| `EnterPlanModeTool` / `ExitPlanModeTool` | Plan mode toggle |
-| `EnterWorktreeTool` / `ExitWorktreeTool` | Git worktree isolation |
-| `ToolSearchTool` | Deferred tool discovery |
-| `CronCreateTool` | Scheduled trigger creation |
-| `RemoteTriggerTool` | Remote trigger |
-| `SleepTool` | Proactive mode wait |
-| `SyntheticOutputTool` | Structured output generation |
-
-### 2. Command System (`src/commands/`)
-
-User-facing slash commands invoked with `/` prefix.
-
-| Command | Description |
-|---|---|
-| `/commit` | Create a git commit |
-| `/review` | Code review |
-| `/compact` | Context compression |
-| `/mcp` | MCP server management |
-| `/config` | Settings management |
-| `/doctor` | Environment diagnostics |
-| `/login` / `/logout` | Authentication |
-| `/memory` | Persistent memory management |
-| `/skills` | Skill management |
-| `/tasks` | Task management |
-| `/vim` | Vim mode toggle |
-| `/diff` | View changes |
-| `/cost` | Check usage cost |
-| `/theme` | Change theme |
-| `/context` | Context visualization |
-| `/pr_comments` | View PR comments |
-| `/resume` | Restore previous session |
-| `/share` | Share session |
-| `/desktop` | Desktop app handoff |
-| `/mobile` | Mobile app handoff |
-
-### 3. Service Layer (`src/services/`)
-
-| Service | Description |
-|---|---|
-| `api/` | Anthropic API client, file API, bootstrap |
-| `mcp/` | Model Context Protocol server connection and management |
-| `oauth/` | OAuth 2.0 authentication flow |
-| `lsp/` | Language Server Protocol manager |
-| `analytics/` | GrowthBook-based feature flags and analytics |
-| `plugins/` | Plugin loader |
-| `compact/` | Conversation context compression |
-| `policyLimits/` | Organization policy limits |
-| `remoteManagedSettings/` | Remote managed settings |
-| `extractMemories/` | Automatic memory extraction |
-| `tokenEstimation.ts` | Token count estimation |
-| `teamMemorySync/` | Team memory synchronization |
-
-### 4. Bridge System (`src/bridge/`)
-
-A bidirectional communication layer connecting IDE extensions (VS Code, JetBrains) with the Claude Code CLI.
-
-- `bridgeMain.ts` — Bridge main loop
-- `bridgeMessaging.ts` — Message protocol
-- `bridgePermissionCallbacks.ts` — Permission callbacks
-- `replBridge.ts` — REPL session bridge
-- `jwtUtils.ts` — JWT-based authentication
-- `sessionRunner.ts` — Session execution management
-
-### 5. Permission System (`src/hooks/toolPermission/`)
-
-Checks permissions on every tool invocation. Either prompts the user for approval/denial or automatically resolves based on the configured permission mode (`default`, `plan`, `bypassPermissions`, `auto`, etc.).
-
-### 6. Feature Flags
-
-Dead code elimination via Bun's `bun:bundle` feature flags:
-
-```typescript
-import { feature } from 'bun:bundle'
-
-// Inactive code is completely stripped at build time
-const voiceCommand = feature('VOICE_MODE')
-  ? require('./commands/voice/index.js').default
-  : null
-```
-
-Notable flags: `PROACTIVE`, `KAIROS`, `BRIDGE_MODE`, `DAEMON`, `VOICE_MODE`, `AGENT_TRIGGERS`, `MONITOR_TOOL`
+| Flag | Unlocks |
+|------|---------|
+| `KAIROS` | Channels mode (Telegram, Discord, Slack bots) |
+| `BRIDGE_MODE` | Remote control daemon + `/bridge` command |
+| `VOICE_MODE` | Voice input/output |
+| `PROACTIVE` | Proactive suggestion system |
+| `DAEMON` | Background daemon process |
+| `ULTRAPLAN` | Extended ultra plan mode |
+| `FORK_SUBAGENT` | `/fork` conversation branching |
+| `WORKFLOW_SCRIPTS` | `.claude/workflows/` script runner |
+| `TRANSCRIPT_CLASSIFIER` | Auto permission mode via transcript analysis |
+| `TEAMMEM` | Team memory sync |
+| `TORCH` | Internal Anthropic workflow |
+| `BUDDY` | Buddy agent mode |
+| `UDS_INBOX` | Unix socket peer-to-peer inbox |
 
 ---
 
-## Key Files in Detail
-
-### `QueryEngine.ts` (~46K lines)
-
-The core engine for LLM API calls. Handles streaming responses, tool-call loops, thinking mode, retry logic, and token counting.
-
-### `Tool.ts` (~29K lines)
-
-Defines base types and interfaces for all tools — input schemas, permission models, and progress state types.
-
-### `commands.ts` (~25K lines)
-
-Manages registration and execution of all slash commands. Uses conditional imports to load different command sets per environment.
-
-### `main.tsx`
-
-Commander.js-based CLI parser and React/Ink renderer initialization. At startup, it overlaps MDM settings, keychain prefetch, and GrowthBook initialization for faster boot.
-
----
-
-## Tech Stack
-
-| Category | Technology |
-|---|---|
-| Runtime | [Bun](https://bun.sh) |
-| Language | TypeScript (strict) |
-| Terminal UI | [React](https://react.dev) + [Ink](https://github.com/vadimdemedes/ink) |
-| CLI Parsing | [Commander.js](https://github.com/tj/commander.js) (extra-typings) |
-| Schema Validation | [Zod v4](https://zod.dev) |
-| Code Search | [ripgrep](https://github.com/BurntSushi/ripgrep) |
-| Protocols | [MCP SDK](https://modelcontextprotocol.io), LSP |
-| API | [Anthropic SDK](https://docs.anthropic.com) |
-| Telemetry | OpenTelemetry + gRPC |
-| Feature Flags | GrowthBook |
-| Auth | OAuth 2.0, JWT, macOS Keychain |
-
----
-
-## Notable Design Patterns
-
-### Parallel Prefetch
-
-Startup time is optimized by prefetching MDM settings, keychain reads, and API preconnect in parallel before heavy module evaluation begins.
-
-```typescript
-// main.tsx — fired as side-effects before other imports
-startMdmRawRead()
-startKeychainPrefetch()
-```
-
-### Lazy Loading
-
-Heavy modules (OpenTelemetry, gRPC, analytics, and some feature-gated subsystems) are deferred via dynamic `import()` until actually needed.
-
-### Agent Swarms
-
-Sub-agents are spawned via `AgentTool`, with `coordinator/` handling multi-agent orchestration. `TeamCreateTool` enables team-level parallel work.
-
-### Skill System
-
-Reusable workflows defined in `skills/` are executed through `SkillTool`. Users can add custom skills.
-
-### Plugin Architecture
-
-Built-in and third-party plugins are loaded through the `plugins/` subsystem.
-
----
-
-## Research / Ownership Disclaimer
-
-- This repository is an **educational and defensive security research archive** maintained by a university student.
-- It exists to study source exposure, packaging failures, and the architecture of modern agentic CLI systems.
-- The original Claude Code source remains the property of **Anthropic**.
-- This repository is **not affiliated with, endorsed by, or maintained by Anthropic**.
+> **Disclaimer:** This repository contains source code obtained through a source map leak in Anthropic's npm package distribution. It is published here for security research and educational purposes only.
