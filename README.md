@@ -1,4 +1,4 @@
-# Claude Code Exposure Archive and OmX Workflow Notes
+# Claude Code Exposure Archive, Python Porting Context, and OmX Workflow Notes
 
 > This repository keeps a **publicly exposed Claude Code source snapshot** that became accessible on **March 31, 2026** through a source map exposure in the npm distribution, together with companion essay/context notes and OmX-assisted documentation work.
 
