@@ -22,16 +22,15 @@ This archive is intended to support:
 
 Related research writing:
 
-- [Local archive copy — March 9, 2026: “Is legal the same as legitimate: AI reimplementation and the erosion of copyleft”](2026-03-09-is-legal-the-same-as-legitimate-ai-reimplementation-and-the-erosion-of-copyleft.md)
-- [Original publication — Hong Minhee, *Is legal the same as legitimate: AI reimplementation and the erosion of copyleft*](https://writings.hongminhee.org/2026/03/legal-vs-legitimate/)
+- [*Is legal the same as legitimate: AI reimplementation and the erosion of copyleft*](https://writings.hongminhee.org/2026/03/legal-vs-legitimate/)
 
 The essay is dated **March 9, 2026**, so it should be read as companion analysis that predates the **March 31, 2026** source exposure documented below.
 
 ## Why this archive exists (and what it is not)
 
-I initially kept this repository as a source-exposure archive so I could study the harness, tool wiring, and agent workflow. After sitting with the legal and ethical questions more seriously—and after reading Hong Minhee's essay—I no longer wanted the README to treat raw legality as the only frame.
+I initially kept this repository as a source-exposure archive so I could study the harness, tool wiring, and agent workflow. After sitting with the legal and ethical questions more seriously—and after reading the essay linked above—I no longer wanted the README to treat raw legality as the only frame.
 
-This branch therefore takes a smaller and more honest step: it preserves Hong Minhee's essay as companion reading and makes the archive's research-only framing more explicit. This repository is still a mirrored TypeScript source snapshot for analysis; it is **not** a clean-room or Python rewrite.
+This branch therefore takes a smaller and more honest step: it keeps that essay in view as companion reading and makes the archive's research-only framing more explicit. This repository is still a mirrored TypeScript source snapshot for analysis; it is **not** a clean-room or Python rewrite.
 
 ## Built with `oh-my-codex`
 
