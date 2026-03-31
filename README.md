@@ -1,10 +1,10 @@
-# Claude Code Source Snapshot for Security Research
+# Claude Code Exposure Archive and OmX Workflow Notes
 
-> This repository mirrors a **publicly exposed Claude Code source snapshot** that became accessible on **March 31, 2026** through a source map exposure in the npm distribution. It is maintained for **educational, defensive security research, and software supply-chain analysis**.
+> This repository keeps a **publicly exposed Claude Code source snapshot** that became accessible on **March 31, 2026** through a source map exposure in the npm distribution, together with companion essay/context notes and OmX-assisted documentation work.
 
 ---
 
-## Research Context
+## Archive Context
 
 This repository is maintained by a **university student** studying:
 
@@ -39,6 +39,16 @@ The README/essay archival work on this branch was AI-assisted and orchestrated w
 - **`$team` mode:** used for coordinated parallel review of repo fit, wording risk, and final architecture consistency.
 - **`$ralph` mode:** used for persistent execution, verification, and final architect sign-off before claiming completion.
 - **Codex-driven workflow:** this documentation/contextualization pass was completed with Codex under OmX orchestration.
+
+### OmX workflow screenshots
+
+![OmX workflow screenshot 1](assets/omx/omx-readme-review-1.png)
+
+*Ralph/team orchestration view while the README and essay context were being reviewed in terminal panes.*
+
+![OmX workflow screenshot 2](assets/omx/omx-readme-review-2.png)
+
+*Split-pane review and verification flow during the final README wording pass.*
 
 It does **not** claim ownership of the original code, and it should not be interpreted as an official Anthropic repository.
 
