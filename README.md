@@ -20,6 +20,27 @@ This archive is intended to support:
 - architecture review
 - discussion of packaging and release-process failures
 
+Related research writing:
+
+- [Local archive copy — March 9, 2026: “Is legal the same as legitimate: AI reimplementation and the erosion of copyleft”](2026-03-09-is-legal-the-same-as-legitimate-ai-reimplementation-and-the-erosion-of-copyleft.md)
+- [Original publication — Hong Minhee, *Is legal the same as legitimate: AI reimplementation and the erosion of copyleft*](https://writings.hongminhee.org/2026/03/legal-vs-legitimate/)
+
+The essay is dated **March 9, 2026**, so it should be read as companion analysis that predates the **March 31, 2026** source exposure documented below.
+
+## Why this archive exists (and what it is not)
+
+I initially kept this repository as a source-exposure archive so I could study the harness, tool wiring, and agent workflow. After sitting with the legal and ethical questions more seriously—and after reading Hong Minhee's essay—I no longer wanted the README to treat raw legality as the only frame.
+
+This branch therefore takes a smaller and more honest step: it preserves Hong Minhee's essay as companion reading and makes the archive's research-only framing more explicit. This repository is still a mirrored TypeScript source snapshot for analysis; it is **not** a clean-room or Python rewrite.
+
+## Built with `oh-my-codex`
+
+The README/essay archival work on this branch was AI-assisted and orchestrated with Yeachan Heo's [oh-my-codex (OmX)](https://github.com/Yeachan-Heo/oh-my-codex), a workflow layer built around Codex.
+
+- **`$team` mode:** used for coordinated parallel review of repo fit, wording risk, and final architecture consistency.
+- **`$ralph` mode:** used for persistent execution, verification, and final architect sign-off before claiming completion.
+- **Codex-driven workflow:** this documentation/contextualization pass was completed with Codex under OmX orchestration.
+
 It does **not** claim ownership of the original code, and it should not be interpreted as an official Anthropic repository.
 
 ---
